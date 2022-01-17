@@ -1,14 +1,14 @@
 from typing_extensions import Required
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, FileField, SelectField, DecimalField, RadioField
-from wtforms.validators import DataRequired, Email, Length, Optional, ROUND_UP, InputRequired
-from flask_wtf.file import FileRequired
+from wtforms import StringField, PasswordField, TextAreaField, FileField, SelectField, FloatField, RadioField, EmailField
+from wtforms.validators import DataRequired, Length, Optional, InputRequired
+from flask_wtf.file import FileAllowed, FileRequired
 
 class AddUserForm(FlaskForm):
     """Form for adding users."""
 
     username = StringField('Username', validators=[DataRequired()])
-    email = StringField('E-mail', validators=[DataRequired(), Email()])
+    email = EmailField('E-mail', validators=[DataRequired()])
     password = PasswordField('Password', validators=[Length(min=6)])
     image_url = StringField('(Optional) Image URL')
 
@@ -21,15 +21,20 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[Length(min=6)])
 
 
+# may just choose to do 
+
 class UploadForm(FlaskForm):
     """Form for Uploading Sounds"""
 
-    audiofile = FileField(validators=[FileRequired()])
+    audiofile = FileField('sound', validators=[
+        FileRequired(),
+        FileAllowed(['wav', 'mp3'], 'Wav and Mp3 only!')
+    ])
     name = StringField('Sound Name', validators=[DataRequired()])
     genre = SelectField('Genre', 
     choices=[('electronic', 'Electronic'), ('classical', 'Classical'), ('pop', 'Pop'), ('experimental', 'Experimental'), 
     ('hiphop', 'HipHop'), ('rap', 'Rap'), ('rock', 'Rock'), ('other', 'Other')], validators=[InputRequired()])
-    bpm = DecimalField('bpm', places=2, rounding=ROUND_UP, validators=[InputRequired()])
+    bpm = FloatField('bpm', validators=[InputRequired()])
     sound_type = RadioField('Type', 
     choices=[('piano', 'Piano'), ('guitar', 'Guitar'), ('synth', 'Synth'), ('brass', 'Brass'), ('string', 'String'), 
     ('drums', 'Drums'), ('foley', 'Foley'), ('vocals', 'Vocals')], validators=[InputRequired()] )
