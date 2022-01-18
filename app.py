@@ -1,12 +1,13 @@
 import os
-
-from flask import Flask, render_template, request, flash, redirect, session, g
+from sqlite3 import IntegrityError
+from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
-from flask_login import LoginManager
+from flask_login import LoginManager, login_required, login_user, logout_user
 from flask_wtf.file import FileField
 from werkzeug.utils import secure_filename
 from forms import LoginForm, UploadForm, RegistrationForm
-from models import db, connect_db, User, Sound
+from models import  db, connect_db, User
+
 
 
 import pdb
@@ -49,22 +50,66 @@ def get_home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login_user():
-    """Login Existing User"""
+   
+    form = LoginForm()
 
-    # generate form
-    # validate on submit
-    # do shit with the information from the form
-    # redirect
+    if form.validate_on_submit():
+        user = User.authenticate(form.username.data,
+                                 form.password.data)
 
-    return render_template('login.html')
+        if user:
+            login_user(user)
+            flash(f'Hello, {user.username}!', 'success')
+
+            # next = request.args.get('next')
+            # # is_safe_url should check if the url is safe for redirects.
+            # # See http://flask.pocoo.org/snippets/62/ for an example.
+            # if not is_safe_url(next):
+            #     return os.abort(400)
+            
+            return redirect('/')
+        else:
+            form.username.errors = ['Invalid username/password.']
+            flash('Invalid credentials.', 'danger')
+            return render_template('login.html', form=form)
+
+    return render_template('login.html', form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register_new_user():
     """Register New User"""
 
-    # generate form
-    # validate on submit
-    # do shit with the information from the form
-    # redirect
+    form = RegistrationForm()
 
-    return render_template('register.html')
+    if form.validate_on_submit():
+        try:
+            user = User.signup(
+                username=form.username.data,
+                password=form.password.data,
+                email=form.email.data,
+                image_url=form.image_url.data or User.image_url.default.arg,
+            )
+            db.session.commit()
+            login_user(user)
+
+        except IntegrityError:
+            flash('Username already taken', 'danger')
+            return render_template('register.html', form=form)
+
+        return redirect('/')
+
+    else:
+        return render_template('register.html', form=form)
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect('/')
+
+
+
+##############################################################################
+# Profile Route
+

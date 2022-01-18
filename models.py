@@ -1,6 +1,11 @@
 """SQLAlchemy Models for Sample Seeker"""
+from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+
+
+bcrypt = Bcrypt()
 db = SQLAlchemy()
+
 
 class Sound(db.Model):
     """Class for Individual Sounds"""
@@ -43,7 +48,7 @@ class Sound(db.Model):
        db.String,
        nullable=False
     )
- 
+
 
     description = db.Column(
         db.String(240),
@@ -74,19 +79,41 @@ class User(db.Model):
         nullable=False,
         unique=True,
     )
-    
-    #maybe make this a join on the condition where this accesses all sounds that have the user id
-    sounds = db.relationship('Sound',
-                               backref='users')
 
-    
+    password = password = db.Column(
+        db.String(20),
+        nullable=False,
+    )
+
+    # maybe make this a join on the condition where this accesses all sounds that have the user id
+    # sounds = db.relationship('Sound',
+    #                            backref='users')
+
     
     def __repr__(self):
         return f"<User #{self.id}:{self.fullname}, {self.username}, {self.email}>"
 
+    @classmethod
+    def signup(cls, username, email, password):
+        """Sign up user.
+
+        Hashes password and adds user to system.
+        """
+
+        hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
+
+        user = User(
+            username=username,
+            email=email,
+            password=hashed_pwd,
+        )
+
+        db.session.add(user)
+        return user
 
 def connect_db(app):
     """Connect to database."""
 
     db.app = app
     db.init_app(app)
+

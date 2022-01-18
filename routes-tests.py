@@ -34,3 +34,18 @@ class HomeViewTestCase(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn('<h1>SAMPLE SEEKER REDUX</h1>', html)
+
+
+class LoginViewTestCase(TestCase):
+    """Testing our Login Route"""
+
+    def test_get_login(self):
+        with app.test_client() as client:
+            resp = client.get('/login')
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('<h2>Welcome back!</h2>', html)
+
+
+

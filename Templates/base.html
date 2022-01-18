@@ -7,6 +7,27 @@
     <title> {% block title %} {% endblock %}</title>
 </head>
 <body>
+    <div class="navbar-container">
+        <nav>
+            
+            <a>Home</a>
+            <a>About</a>
+            {% if current_user.is_authenticated == False %}
+                <!-- if not logged in -->
+                <a>Login</a>
+                <a>Register</a>
+            {% endif %}
+            
+            {% if current_user.is_authenticated %}
+                <!-- if logged in -->
+                <a>Profile</a>
+                <a>Logout</a>
+            {% endif %}
+           
+        </nav>
+
+    </div>
+    
     {% block content %}
     {% endblock %}
    

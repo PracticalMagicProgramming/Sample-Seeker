@@ -4,33 +4,19 @@ from wtforms import StringField, PasswordField, TextAreaField, FileField, Select
 from wtforms.validators import DataRequired, Length, Optional, InputRequired
 from flask_wtf.file import FileAllowed, FileRequired
 
-class AddUserForm(FlaskForm):
+class RegistrationForm(FlaskForm):
     """Form for adding users."""
 
     username = StringField('Username', validators=[DataRequired()])
     email = EmailField('E-mail', validators=[DataRequired()])
     password = PasswordField('Password', validators=[Length(min=6)])
-    image_url = StringField('(Optional) Image URL')
-
-
-
+    
 class LoginForm(FlaskForm):
     """Login form"""
 
     username = StringField('Username', validators=[DataRequired()])
+    email = EmailField('E-mail', validators=[DataRequired()])
     password = PasswordField('Password', validators=[Length(min=6)])
-
-
-class RegistrationForm(FlaskForm):
-    """Registration form"""
-
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[Length(min=6)])
-
-
-
-
-# may just choose to do 
 
 class UploadForm(FlaskForm):
     """Form for Uploading Sounds"""
