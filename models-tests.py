@@ -43,8 +43,10 @@ class ModelTestCase(TestCase):
         """Adding to User Model"""
 
         u = User(
-            email='test@test.com',
+           
             username='testuser',
+            email='test@test.com',
+            password = 'password'
         )
 
         db.session.add(u)
@@ -52,6 +54,29 @@ class ModelTestCase(TestCase):
         
         
         self.assertEqual(u.username, 'testuser')
+        self.assertEqual(u.password, 'password')
+
+    def test_sign_up(self):
+        """tests our sign_up class method"""
+
+        new_user = User.signup(username='testuser2', email='test2@test.com', password = 'password')
+        db.session.commit()
+
+        self.assertEqual(new_user.username, 'testuser2')
+
+    def test_authenticate(self):
+        """Test User Model Authenticate Method"""
+
+        #sign member up
+        other_new_user = User.signup(username='testuser3', email='test3@test.com', password = 'apassword')
+        db.session.commit()
+        
+        # test authenticate for new person logging in
+        returning_user = User.authenticate(username='testuser3', password = 'apassword')
+
+        self.assertTrue(returning_user)
+
+
     
 
     

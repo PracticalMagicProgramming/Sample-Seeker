@@ -15,7 +15,6 @@ class LoginForm(FlaskForm):
     """Login form"""
 
     username = StringField('Username', validators=[DataRequired()])
-    email = EmailField('E-mail', validators=[DataRequired()])
     password = PasswordField('Password', validators=[Length(min=6)])
 
 class UploadForm(FlaskForm):
@@ -25,7 +24,7 @@ class UploadForm(FlaskForm):
         FileRequired(),
         FileAllowed(['wav', 'mp3'], 'Wav and Mp3 only!')
     ])
-    name = StringField('Sound Name', validators=[DataRequired()])
+    sound_name = StringField('Sound Name', validators=[DataRequired()])
     genre = SelectField('Genre', 
     choices=[('electronic', 'Electronic'), ('classical', 'Classical'), ('pop', 'Pop'), ('experimental', 'Experimental'), 
     ('hiphop', 'HipHop'), ('rap', 'Rap'), ('rock', 'Rock'), ('other', 'Other')], validators=[InputRequired()])

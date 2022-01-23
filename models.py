@@ -18,13 +18,7 @@ class Sound(db.Model):
         autoincrement=True
     )
 
-    uploader = db.Column(
-        db.Integer,
-        db.ForeignKey('users.id'),
-        nullable=False
-    )
-
-    sound_file = db.Column(
+    audiofile = db.Column(
         db.LargeBinary,
         nullable=False
     )
@@ -80,18 +74,18 @@ class User(db.Model):
         unique=True,
     )
 
-    password = password = db.Column(
-        db.String(20),
-        nullable=False,
+    password = db.Column(
+        db.String,
+        nullable=False
     )
 
-    # maybe make this a join on the condition where this accesses all sounds that have the user id
-    # sounds = db.relationship('Sound',
-    #                            backref='users')
+    # Est. Relantionship to sounds through our uploads table
+    user_uploads = db.relationship('Sound',
+                               secondary='uploads',
+                               backref='users')
 
-    
     def __repr__(self):
-        return f"<User #{self.id}:{self.fullname}, {self.username}, {self.email}>"
+        return f"<User #{self.id}:  {self.username}, {self.email}, {self.password}>"
 
     @classmethod
     def signup(cls, username, email, password):
@@ -110,6 +104,40 @@ class User(db.Model):
 
         db.session.add(user)
         return user
+
+    @classmethod
+    def authenticate(cls, username, password):
+        """Find user with `username` and `password`.
+
+        This is a class method (call it on the class, not an individual user.)
+        It searches for a user whose password hash matches this password
+        and, if it finds such a user, returns that user object.
+
+        If can't find matching user (or if password is wrong), returns False.
+        """
+
+        user = cls.query.filter_by(username=username).first()
+
+        if user:
+            is_auth = bcrypt.check_password_hash(user.password, password)
+            if is_auth:
+                return user
+
+        return False
+
+class Upload(db.Model):
+    """M2M Model linking users to their uploaded sounds"""
+
+    __tablename__ = 'uploads'
+
+    # Using a Composite Primary Key as this as Associative Entity table, not directly referenced
+    user_id = db.Column(db.Integer,
+                       db.ForeignKey('users.id'),
+                       primary_key=True)
+    sound_id = db.Column(db.Text,
+                          db.ForeignKey('sounds.id'),
+                          primary_key=True)
+
 
 def connect_db(app):
     """Connect to database."""

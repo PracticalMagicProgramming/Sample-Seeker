@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} upload {% endblock %}
+
+{% block content %}
+
+  <div>
+      <div><h2>Upload Your Sounds</h2></div>
+      
+    <div class=form-div>
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }} 
+      
+            {% for field in form
+                if field.widget.input_type != 'hidden' %}
+      
+            <p>
+                {{ field.label }}
+                {{ field }}
+      
+                {% for error in field.errors %}
+                {{ error }}
+                {% endfor %}
+            </p>
+            {% endfor %}
+    
+            <button type="submit">Login</button>
+        </form>
+    </div> 
+  </div>
+
+{% endblock %}
