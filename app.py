@@ -9,15 +9,13 @@ from werkzeug.utils import secure_filename
 from forms import LoginForm, UploadForm, RegistrationForm
 from models import  Sound, db, connect_db, User
 
-
-
 import pdb
 #instantiating an instance of the LoginManager class
 login_manager = LoginManager()
 
 app = Flask(__name__)
 #marrying our app with the login manager :3 
-# login_manager.init_app(app)
+login_manager.init_app(app)
 
 # Get DB_URI from environ variable 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
@@ -55,17 +53,12 @@ def login_user():
     form = LoginForm()
 
     if form.validate_on_submit():
-        user = User.authenticate(form.username.data, form.email.data, form.password.data)
-
+        user = User.query.get(form.email.data)
+        
         if user:
-            login_user(user)
+            User.authenticate(form.username.data, form.email.data, form.password.data)
+            login_user(user, remember=True)
             flash(f'Hello, {user.username}!', 'success')
-
-            # next = request.args.get('next')
-            # # is_safe_url should check if the url is safe for redirects.
-            # # See http://flask.pocoo.org/snippets/62/ for an example.
-            # if not is_safe_url(next):
-            #     return os.abort(400)
 
             return redirect('/')
         else:
@@ -84,6 +77,7 @@ def register_new_user():
     if form.validate_on_submit():
         try:
             user = User.signup( username=form.username.data, password=form.password.data)
+            db.session.add()
             db.session.commit()
             login_user(user)
 

@@ -1,7 +1,7 @@
 """SQLAlchemy Models for Sample Seeker"""
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_login import UserMixin
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -53,7 +53,7 @@ class Sound(db.Model):
         return f"<User #{self.id}:{self.sound_type}, {self.tags}, {self.description}>"
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     """User in the Sample Seeker Database"""
 
     __tablename__ = 'users'
@@ -73,7 +73,6 @@ class User(db.Model):
         nullable=False,
         unique=True,
     )
-
     password = db.Column(
         db.String,
         nullable=False
@@ -83,9 +82,6 @@ class User(db.Model):
     user_uploads = db.relationship('Sound',
                                secondary='uploads',
                                backref='users')
-
-    def __repr__(self):
-        return f"<User #{self.id}:  {self.username}, {self.email}, {self.password}>"
 
     @classmethod
     def signup(cls, username, email, password):

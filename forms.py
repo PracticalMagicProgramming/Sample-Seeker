@@ -1,5 +1,6 @@
 from typing_extensions import Required
 from flask_wtf import FlaskForm
+from importlib_metadata import email
 from wtforms import StringField, PasswordField, TextAreaField, FileField, SelectField, FloatField, RadioField, EmailField
 from wtforms.validators import DataRequired, Length, Optional, InputRequired
 from flask_wtf.file import FileAllowed, FileRequired
@@ -15,6 +16,7 @@ class LoginForm(FlaskForm):
     """Login form"""
 
     username = StringField('Username', validators=[DataRequired()])
+    email = EmailField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[Length(min=6)])
 
 class UploadForm(FlaskForm):
