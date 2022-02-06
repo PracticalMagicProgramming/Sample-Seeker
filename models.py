@@ -2,11 +2,15 @@
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+from flask_migrate import Migrate
+
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
+migrate = Migrate()
 
 
+   
 class Sound(db.Model):
     """Class for Individual Sounds"""
 
@@ -130,14 +134,16 @@ class Upload(db.Model):
     user_id = db.Column(db.Integer,
                        db.ForeignKey('users.id'),
                        primary_key=True)
-    sound_id = db.Column(db.Text,
+    sound_id = db.Column(db.Integer,
                           db.ForeignKey('sounds.id'),
                           primary_key=True)
 
-
 def connect_db(app):
     """Connect to database."""
-
     db.app = app
     db.init_app(app)
+    migrate=Migrate(app,db) #Initializing migrate.
+
+
+    
 

@@ -6,8 +6,10 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask_login import LoginManager, login_required, login_user, logout_user
 from flask_wtf.file import FileField
 from werkzeug.utils import secure_filename
+from sqlalchemy.sql import text
 from forms import LoginForm, UploadForm, RegistrationForm
-from models import  Sound, db, connect_db, User
+from models import  User, Sound, db, connect_db
+
 
 import pdb
 #instantiating an instance of the LoginManager class
@@ -29,12 +31,14 @@ toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
 
+
+
 # This uses login manager to query our database and determine if the user is logged on or not
 @login_manager.user_loader
 def load_user(user_id):
-    user = User.query.get_one_or_none(user_id)
-    return user
-
+    """returns user id from session to validate login"""
+    user = text(user_id)
+    return User.query.filter_by(id=user).first()
 
 ##############################################################################
 # Login/Register and Logout
@@ -48,15 +52,15 @@ def get_home():
 
 
 @app.route('/login', methods=['GET', 'POST'])
-def login_user():
-   
+def returning_user():
+    """Logs in an returning user"""
     form = LoginForm()
 
     if form.validate_on_submit():
-        user = User.query.get(form.email.data)
+        user = User.query.filter_by(username=form.username.data).first()
         
         if user:
-            User.authenticate(form.username.data, form.email.data, form.password.data)
+            User.authenticate(form.username.data, form.password.data)
             login_user(user, remember=True)
             flash(f'Hello, {user.username}!', 'success')
 
@@ -76,8 +80,8 @@ def register_new_user():
 
     if form.validate_on_submit():
         try:
-            user = User.signup( username=form.username.data, password=form.password.data)
-            db.session.add()
+            user = User.signup( username=form.username.data, email=form.email.data, password=form.password.data)
+            db.session.add(user)
             db.session.commit()
             login_user(user)
 
@@ -121,23 +125,28 @@ def get_upload_page():
     form = UploadForm()
     
     if form.validate_on_submit():
-        try:
-            sound = Sound( 
-                audiofile = form.audiofile.data.read(),
+            # If file data exists
+            if form.audiofile.data:
+              # Look in the request dictionary, there should be a key with the uploads name
+              audio_data = request.files[form.audiofile.name]
+              sound = Sound( 
+                #reads the upload into the db
+                audiofile = audio_data.read(),
                 sound_name = secure_filename(form.sound_name.data),
                 genre = form.genre.data,
                 bpm = form.bpm.data,
                 sound_type = form.sound_type.data,
                 description = form.description.data
                 )
+            db.session.add(sound)
             db.session.commit()
-            login_user(sound)
+            
 
-        except IntegrityError:
+    else:
             flash('upload not successful', 'danger')
             return render_template('upload.html', form=form)
 
-        return redirect('/sounds/upload')
+            return redirect('/sounds/upload')
 
 
-    return render_template('upload.html')
+    return render_template('upload.html', form=form)

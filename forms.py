@@ -34,6 +34,6 @@ class UploadForm(FlaskForm):
     sound_type = RadioField('Type', 
     choices=[('piano', 'Piano'), ('guitar', 'Guitar'), ('synth', 'Synth'), ('brass', 'Brass'), ('string', 'String'), 
     ('drums', 'Drums'), ('foley', 'Foley'), ('vocals', 'Vocals')], validators=[InputRequired()] )
-    description = TextAreaField('Sound Description', validators=[Length(240), Optional()])
+    description = TextAreaField('Sound Description', validators=[Optional()])
 
     
