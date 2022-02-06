@@ -8,7 +8,7 @@
       <div><h2>Upload Your Sounds</h2></div>
       
     <div class=form-div>
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST" action='/sounds/upload' enctype="multipart/form-data">
             {{ form.hidden_tag() }} 
       
             {% for field in form

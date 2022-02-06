@@ -8,6 +8,15 @@
 
 <span> Hi there! </span>
 
+<tr hx-get="'/users/profile/{{ user.id }}'"
+    hx-trigger="revealed"
+    hx-swap="afterend">
+   
+    {% for upload in user_uploads %}
+      <td> {{ upload.name }}} </td>
+      <td> <a href="/sounds/detail/{{ upload.id }}">View Details</a></td>
+    {% endfor %}
+</tr>
 
 
 {% endblock %}

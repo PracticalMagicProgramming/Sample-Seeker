@@ -1,9 +1,10 @@
 from distutils.command.upload import upload
 import os
+from io import BytesIO
 from sqlite3 import IntegrityError
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, g, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
-from flask_login import LoginManager, login_required, login_user, logout_user
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_wtf.file import FileField
 from werkzeug.utils import secure_filename
 from sqlalchemy.sql import text
@@ -63,7 +64,6 @@ def returning_user():
             User.authenticate(form.username.data, form.password.data)
             login_user(user, remember=True)
             flash(f'Hello, {user.username}!', 'success')
-
             return redirect('/')
         else:
             form.username.errors = ['Invalid username/password.']
@@ -106,13 +106,18 @@ def logout():
 ##############################################################################
 # Profile Route
 
-@app.route('/users/profile')
+@app.route('/users/profile/<int:user_id>')
 @login_required
-def get_profile_page():
-    
-
-
-    return render_template('profile.html')
+def get_profile_page(user_id):
+    profile_user = User.query.get_by(user_id)
+    #GRAB THE USER
+    if current_user.is_authenticated():
+        if current_user == profile_user:
+            g.user = current_user
+    #GRAB THEIR UPLOADS
+            user_uploads = g.user.uploads
+    #SEND TO JINJA TEMPLATE TO BE DISPLAYED
+            return render_template('profile.html', user=g.user , user_uploads=user_uploads)
 
 ##############################################################################
 # Sound Views 
@@ -140,13 +145,19 @@ def get_upload_page():
                 )
             db.session.add(sound)
             db.session.commit()
-            
-
-    else:
-            flash('upload not successful', 'danger')
-            return render_template('upload.html', form=form)
-
             return redirect('/sounds/upload')
+            
+    else:
+        return render_template('upload.html', form=form)
 
+@app.route('/sounds/detail/<int:upload_id>')
+@login_required
+def display_sound_detail(upload_id):
+    """Grabs and Displays Detailed Info for a Sound Instance"""
+    if current_user.is_authenticated():
+            g.user = current_user
+    sound = Sound.query.get_by(upload_id)
+    # logic from unpacking the sound from the DB to preview
+    sound_data = BytesIO(upload.audiofile)
 
-    return render_template('upload.html', form=form)
+    return render_template('detail.html', user=g.user, sound_data=sound_data, sound=sound)
