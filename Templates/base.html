@@ -9,9 +9,8 @@
 <body>
     <div class="navbar-container">
         <nav>
-            
-            <a>Home</a>
-            <a>About</a>
+
+            <a href="/">Home</a>
             {% if current_user.is_authenticated == False %}
                 <!-- if not logged in -->
                 <a href="/login">Login</a>
@@ -21,7 +20,8 @@
             {% if current_user.is_authenticated %}
                 <!-- if logged in -->
                 <a href="/users/profile/{{ current_user.id }}">Profile</a>
-                <a>Logout</a>
+                <a href="/sounds/upload">Upload</a>
+                <a href="/logout">Logout</a>
             {% endif %}
            
         </nav>
