@@ -109,15 +109,12 @@ def logout():
 @app.route('/users/profile/<int:user_id>')
 @login_required
 def get_profile_page(user_id):
-    profile_user = User.query.get_or_404(user_id)
     #GRAB THE USER
-    if current_user.is_authenticated():
-        if current_user == profile_user:
-            g.user = current_user
+    user = User.query.get_or_404(user_id)
     #GRAB THEIR UPLOADS
-            user_uploads = g.user.uploads
+    user_uploads = user.uploads
     #SEND TO JINJA TEMPLATE TO BE DISPLAYED
-            return render_template('profile.html', user=g.user , user_uploads=user_uploads)
+    return render_template('profile.html', user=g.user , user_uploads=user_uploads)
 
 ##############################################################################
 # Sound Views 
@@ -128,8 +125,8 @@ def get_upload_page():
     """View Function to Upload a Sound to Sample Seeker"""
     
     form = UploadForm()
-    if current_user.is_authenticated():
-        g.user = current_user
+    user_id = current_user.get_id()
+    user =  User.query.get_or_404(user_id)
     
     if form.validate_on_submit():
             # If file data exists
@@ -149,7 +146,7 @@ def get_upload_page():
             db.session.commit()
             
             #add the sound to the current users uploads
-            g.user.user_uploads.append(sound)
+            user.user_uploads.append(sound)
             db.session.commit()
             return redirect('/sounds/upload')
             
@@ -160,10 +157,10 @@ def get_upload_page():
 @login_required
 def display_sound_detail(upload_id):
     """Grabs and Displays Detailed Info for a Sound Instance"""
-    if current_user.is_authenticated():
-            g.user = current_user
+    user_id = current_user.get_id()
+    user =  User.query.get_or_404(user_id)
     sound = Sound.query.get_by(upload_id)
     # logic from unpacking the sound from the DB to preview
     sound_data = BytesIO(upload.audiofile)
 
-    return render_template('detail.html', user=g.user, sound_data=sound_data, sound=sound)
+    return render_template('detail.html', user=user, sound_data=sound_data, sound=sound)
