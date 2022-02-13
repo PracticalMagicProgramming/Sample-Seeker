@@ -160,7 +160,8 @@ def display_sound_detail(sound_id):
     user_id = current_user.get_id()
     user =  User.query.get_or_404(user_id)
     
-    sound = user.query.filter(user.user_uploads.sound_id== sound_id)
+    sought_sound = [sound.id for sound in user.user_uploads if sound.id == sound_id]
+    sound = sought_sound[0]
     
     # logic from unpacking the sound from the DB to preview
     sound_data = BytesIO(sound.audiofile)
