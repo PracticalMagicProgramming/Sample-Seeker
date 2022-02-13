@@ -159,9 +159,7 @@ def display_sound_detail(sound_id):
     """Grabs and Displays Detailed Info for a Sound Instance"""
     user_id = current_user.get_id()
     user =  User.query.get_or_404(user_id)
-    
-    sought_sound = [sound.id for sound in user.user_uploads if sound.id == sound_id]
-    sound = sought_sound[0]
+    sound = Sound.query.get_or_404(sound_id)
     
     # logic from unpacking the sound from the DB to preview
     sound_data = BytesIO(sound.audiofile)
