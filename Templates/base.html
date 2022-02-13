@@ -14,13 +14,13 @@
             <a>About</a>
             {% if current_user.is_authenticated == False %}
                 <!-- if not logged in -->
-                <a>Login</a>
-                <a>Register</a>
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
             {% endif %}
             
             {% if current_user.is_authenticated %}
                 <!-- if logged in -->
-                <a>Profile</a>
+                <a href="/users/profile/{{ current_user.id }}">Profile</a>
                 <a>Logout</a>
             {% endif %}
            
