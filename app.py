@@ -112,9 +112,9 @@ def get_profile_page(user_id):
     #GRAB THE USER
     user = User.query.get_or_404(user_id)
     #GRAB THEIR UPLOADS
-    user_uploads = user.uploads
+    user_uploads = user.user_uploads
     #SEND TO JINJA TEMPLATE TO BE DISPLAYED
-    return render_template('profile.html', user=g.user , user_uploads=user_uploads)
+    return render_template('profile.html', user=user , user_uploads=user_uploads)
 
 ##############################################################################
 # Sound Views 
@@ -153,14 +153,16 @@ def get_upload_page():
     else:
         return render_template('upload.html', form=form)
 
-@app.route('/sounds/detail/<int:upload_id>')
+@app.route('/sounds/detail/<int:sound_id>')
 @login_required
-def display_sound_detail(upload_id):
+def display_sound_detail(sound_id):
     """Grabs and Displays Detailed Info for a Sound Instance"""
     user_id = current_user.get_id()
     user =  User.query.get_or_404(user_id)
-    sound = Sound.query.get_by(upload_id)
+    
+    sound = user.query.filter(user.user_uploads.sound_id== sound_id)
+    
     # logic from unpacking the sound from the DB to preview
-    sound_data = BytesIO(upload.audiofile)
+    sound_data = BytesIO(sound.audiofile)
 
     return render_template('detail.html', user=user, sound_data=sound_data, sound=sound)
