@@ -13,7 +13,7 @@
     hx-swap="afterend"> -->
 <tr>   
     {% for upload in user_uploads %}
-      <td> {{ upload.name }} </td>
+      <td> {{ upload.sound_name}} </td>
       <td> <a href="/sounds/detail/{{ upload.id }}">View Details</a></td>
     {% endfor %}
 </tr>

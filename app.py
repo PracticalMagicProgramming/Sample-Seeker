@@ -6,11 +6,11 @@ from flask import Flask, g, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_wtf.file import FileField
+from sqlalchemy import literal
 from werkzeug.utils import secure_filename
 from sqlalchemy.sql import text
 from forms import LoginForm, UploadForm, RegistrationForm
 from models import  User, Sound, db, connect_db
-
 
 import pdb
 #instantiating an instance of the LoginManager class
@@ -145,11 +145,10 @@ def get_upload_page():
             db.session.add(sound)
             db.session.commit()
             
-            #add the sound to the current users uploads
+            # add the sound to the current users uploads
             user.user_uploads.append(sound)
             db.session.commit()
-            return redirect('/sounds/upload')
-            
+            return redirect('/sounds/upload')        
     else:
         return render_template('upload.html', form=form)
 
