@@ -6,17 +6,14 @@
 
 {% block content %}
 
-<span> Hi there! </span>
+<span> Hi there! {{ user.username }}</span>
 
-<!-- <tr hx-get="'/users/profile/{{ user.id }}'"
-    hx-trigger="revealed"
-    hx-swap="afterend"> -->
-<tr>   
-    {% for upload in user_uploads %}
-      <td> {{ upload.sound_name}} </td>
-      <td> <a href="/sounds/detail/{{ upload.id }}">View Details</a></td>
-    {% endfor %}
-</tr>
-
+<div class="container"> 
+  <p>What would you like to do today?</p>
+  <div>
+    <a href="/sounds/upload">Upload new sounds</a>
+    <a href="/users/profile/{{ user.id }}/sounds/0">Checkout your sounds</a>
+  </div>
+</div>
 
 {% endblock %}

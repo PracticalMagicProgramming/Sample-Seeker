@@ -10,7 +10,7 @@ from sqlalchemy import literal
 from werkzeug.utils import secure_filename
 from sqlalchemy.sql import text
 from forms import LoginForm, UploadForm, RegistrationForm
-from models import  User, Sound, db, connect_db
+from models import  Upload, User, Sound, db, connect_db
 
 import pdb
 #instantiating an instance of the LoginManager class
@@ -104,17 +104,27 @@ def logout():
 
 
 ##############################################################################
-# Profile Route
+# User Routes
 
 @app.route('/users/profile/<int:user_id>')
 @login_required
 def get_profile_page(user_id):
     #GRAB THE USER
     user = User.query.get_or_404(user_id)
-    #GRAB THEIR UPLOADS
-    user_uploads = user.user_uploads
-    #SEND TO JINJA TEMPLATE TO BE DISPLAYED
-    return render_template('profile.html', user=user , user_uploads=user_uploads)
+   
+    return render_template('profile.html', user=user)
+
+# Get All sounds for this user profile and display them paginated
+@app.route('/users/profile/<int:user_id>/sounds/<int:page_num>')
+@login_required
+def get_user_sounds(user_id, page_num):
+    """get and display the user sounds paginated"""
+    #Get user
+    user = User.query.get_or_404(user_id)
+
+    #Get Uploads using user id 
+    user_uploads = Upload.query.filter_by(user_id == user_id).paginate(per_page=5, page=page_num, error_out=True)
+    return render_template('display.html', user=user, user_uploads=user_uploads)
 
 ##############################################################################
 # Sound Views 

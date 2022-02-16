@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %} Display User Sounds Page {% endblock %}
+
+
+
+{% block content %}
+<div class="container">
+<tr>   
+    {% for upload in user_uploads.items %}
+      <td> {{ upload.sound_name}} </td>
+      <td> <a href="/sounds/detail/{{ upload.id }}">View Details</a></td>
+    {% endfor %}
+</tr>
+
+<!-- this is used to iterate through the pages and display a link for each at the bottom -->
+    {% for page in user_uploads.iter_pages(left_edge=2, right_edge=2, left_current=1, right_current=1) %}
+        {% if page %}
+             <a href="/users/profile/{{ user.id }}/sounds/{{ page }}"> {{ page }}</a>
+        {% else %}
+            <span>…</span>
+        {% endif %}
+    {% endfor %}
+</div>
+
+{% endblock %}
