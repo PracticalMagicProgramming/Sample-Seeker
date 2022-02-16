@@ -123,8 +123,8 @@ def get_user_sounds(user_id, page_num):
     user = User.query.get_or_404(user_id)
 
     #Get Uploads using user id 
-    user_uploads = Upload.query.filter_by(user_id == user_id).paginate(per_page=5, page=page_num, error_out=True)
-    return render_template('display.html', user=user, user_uploads=user_uploads)
+    uploads = Upload.query.paginate(per_page=5, page=page_num, error_out=True)
+    return render_template('display.html', user=user, uploads=uploads)
 
 ##############################################################################
 # Sound Views 
