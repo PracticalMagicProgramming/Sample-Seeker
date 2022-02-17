@@ -6,15 +6,18 @@
 
 {% block content %}
 <div class="container">
-<tr>   
-    {% for upload in uploads.items %}
-        {% if upload.user_id == user.id %}
-            <td> {{ upload.sound_name}} </td>
-            <td> <a href="/sounds/detail/{{ upload.id }}">View Details</a></td>
-        {% endif %}
-    {% endfor %}
-</tr>
-
+<table style="height: 100px;">   
+    <tbody>
+        <tr>   
+            {% for upload in uploads.items %}
+                {% if upload.user_id == user.id %}
+                    <td class="align-middle"> {{ upload.sound.sound_name}} </td>
+                    <td class="align-middle"> <a href="/sounds/detail/{{ upload.sound_id }}">View Details</a></td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>
 <!-- this is used to iterate through the pages and display a link for each at the bottom -->
     {% for page in uploads.iter_pages(left_edge=2, right_edge=2, left_current=1, right_current=1) %}
         {% if page %}

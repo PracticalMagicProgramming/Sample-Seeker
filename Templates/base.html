@@ -12,23 +12,52 @@
 </head>
 <body>
     <div class="navbar-container">
-        <nav>
+        <!-- <nav>
 
             <a href="/">Home</a>
             {% if current_user.is_authenticated == False %}
-                <!-- if not logged in -->
+                
                 <a href="/login">Login</a>
                 <a href="/register">Register</a>
             {% endif %}
             
             {% if current_user.is_authenticated %}
-                <!-- if logged in -->
+               
                 <a href="/users/profile/{{ current_user.id }}">Profile</a>
                 <a href="/sounds/upload">Upload</a>
                 <a href="/logout">Logout</a>
             {% endif %}
            
-        </nav>
+        </nav> -->
+
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">home</a>
+            </li>
+            {% if current_user.is_authenticated == False %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/register">Register</a>
+                </li>
+            {% endif %}
+            {% if current_user.is_authenticated %}
+                <!-- if logged in -->
+                <li class="nav-item">
+                     <a class="nav-link" href="/users/profile/{{ current_user.id }}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/sounds/upload">Upload</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            {% endif %}
+       
+
+          </ul>
 
     </div>
     {% block content %}

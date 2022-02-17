@@ -5,15 +5,30 @@
 
 
 {% block content %}
+<h3>
+  Hi there! 
+  <small class="text-muted">{{ user.username }}</small>
+</h3>
 
-<span> Hi there! {{ user.username }}</span>
+<br>
 
-<div class="container"> 
-  <p>What would you like to do today?</p>
-  <div>
-    <a href="/sounds/upload">Upload new sounds</a>
-    <a href="/users/profile/{{ user.id }}/sounds/1">Checkout your sounds</a>
-  </div>
-</div>
+<div class="container">
+  <div class="justify-content-end">
+     <p class="lead">What would you like to do today?</p>
+   </div>
+  <div class="row full-width">
+    <div class="justify-content-center">
+        <div class="col-2">
+          <div class="btn-group-vertical">
+            <a href="/sounds/upload" class="btn btn-dark" >Upload new sounds</a>
+            <a href="/users/profile/{{ user.id }}/sounds/1" class="btn btn-dark">Checkout your sounds</a>
+          </div>
+        </div>
+      </div>
+  </div>           
+</div>    
+
+  
 
 {% endblock %}
+
