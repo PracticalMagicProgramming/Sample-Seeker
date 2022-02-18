@@ -6,18 +6,20 @@
 
 {% block content %}
   
-  <h1 class="display-1 d-inline">
-    Welcome to 
-    <small class="text-muted"> Sample Seeker</small>
-  </h1>
-  <blockquote class="blockquote">
+<h1 class="display-1 d-inline">
+  Welcome to 
+  <small class="text-muted"> Sample Seeker</small>
+</h1> 
+<blockquote class="blockquote">
     <p>A sound organization tool for your sample library</p>
-  </blockquote>
-  <div class="container-fluid ">
-      <div class="btn-group-vertical d-lg ">
-        <a href='/register' class="btn btn-dark"> New? Register here!</a>  
-        <a href='/login' class="btn btn-secondary"> Returning? Login here!</a>
-      </div>
-  </div>     
+</blockquote>
+  
+<div class="container-fluid">
+  <div class="d-grid gap-2 col-5 mx-auto">
+    <a href='/register' class="btn btn-dark"> New? Register here!</a>
+    <a href='/login' class="btn btn-secondary btn"> Returning? Login here!</a>
+  </div>  
+</div>
 
 {% endblock %}
+
