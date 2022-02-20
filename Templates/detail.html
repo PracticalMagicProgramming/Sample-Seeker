@@ -5,32 +5,42 @@
 
 
 {% block content %}
+<div class="container"> 
+  <div class="d-grid gap-2 col-xl-8 mx-auto">
+   
+  <h5 class="card-title mt-4 text-muted">{{ sound.sound_name }}</h5>
+  
+  <div class='audio-control mb-3'>
+      <audio controls>
+       <source src={{ sound_data}} type="audio/wav">
+       <source src={{ sound_data }} type="audio/mpeg">
+      </audio>
+  </div>
 
-<span> {{ sound.name }}</span>
-
-<div class="container">
-
-    <div class='audio-control'>
-        <audio controls>
-         <source src={{ sound_data}} type="audio/wav">
-         <source src={{ sound_data }} type="audio/mpeg">
-        </audio>
-      </div>
-
-      <div>{{ sound.genre }}</div>
-
-      <div> {{ sound.bpm }} </div>
-      
-      <div> {{ sound.sound_type }}</div>
-
-    
-      <div>
+  <div class="row align-items-center justify-content-left">
+  <div class="col-xl-6 col-xl-8">
+    <div class="card text-white bg-dark mb-3">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item text-white bg-dark">{{ sound.genre }}</li>
+          <li class="list-group-item text-white bg-dark">{{ sound.bpm }}</li>
+          <li class="list-group-item text-white bg-dark">{{ sound.sound_type }}</li>
+        </ul>
           <p>
             {{ sound.description}} 
-          </p>     
+          </p>    
+        </div>
       </div>
+    </div>
+  </div> 
+  <a href='/users/profile/{{ user.id }}' class="btn btn-secondary col-xl-8">Go Back</a>    
+</div>    
 </div>
 
-<a href='/users/profile/{{ user.id }}'>Go Back</a>
+
 
 {% endblock %}
+
+
+
+  

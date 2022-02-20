@@ -2,22 +2,28 @@
 
 {% block title %} Display User Sounds Page {% endblock %}
 
-
-
 {% block content %}
-<div class="container">
-<table style="height: 100px;">   
-    <tbody>
-        <tr>   
-            {% for upload in uploads.items %}
-                {% if upload.user_id == user.id %}
-                    <td class="align-middle"> {{ upload.sound.sound_name}} </td>
-                    <td class="align-middle"> <a href="/sounds/detail/{{ upload.sound_id }}">View Details</a></td>
-                {% endif %}
-            {% endfor %}
-        </tr>
-    </tbody>
-</table>
+<div class="container-fluid"> 
+    <table class="table table-dark table-hover align-middle">
+        <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Details link</th>>
+            </tr>
+          </thead>
+          <tbody>
+           
+                {% for upload in uploads.items %}
+                    {% if upload.user_id == user.id %}
+                        <tr scope="row" class="align-middle">   
+                            <td class="align-middle"> {{ upload.sound.sound_name}} </td>
+                            <td class="align-middle"> <a href="/sounds/detail/{{ upload.sound_id }}" class="btn btn-dark">View Details</a></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            
+          </tbody>
+    </table>
 <!-- this is used to iterate through the pages and display a link for each at the bottom -->
     {% for page in uploads.iter_pages(left_edge=2, right_edge=2, left_current=1, right_current=1) %}
         {% if page %}
