@@ -1,7 +1,7 @@
 
 # Welcome to Sample Seeker Redux!
 
-This is my first Capstone Project for Sprinboards Software Engineering Bootcamp.The goal was to create a server-side application using my knowledge of Python, Flask and SQLAlchemy and my imagination!
+This is my first Capstone Project for Springboards Software Engineering Bootcamp.The goal was to create a server-side application using my knowledge of Python, Flask and SQLAlchemy and my imagination!
 
 Sample Seeker is an app where you can upload samples from your personal sample library on your harddrive and categorize them. As music producer myself often a producers sample library is chaotic on the best of days. Having an app to keep track of, store and organize samples is pretty useful! 
 
