@@ -2,7 +2,7 @@ from distutils.command.upload import upload
 import os
 from io import BytesIO
 from sqlite3 import IntegrityError
-from flask import Flask, g, render_template, request, flash, redirect, session
+from flask import Flask, g, render_template, request, flash, redirect, send_file, session
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_wtf.file import FileField
@@ -10,8 +10,7 @@ from sqlalchemy import literal
 from werkzeug.utils import secure_filename
 from sqlalchemy.sql import text
 from forms import LoginForm, UploadForm, RegistrationForm
-from models import  Upload, User, Sound, db, connect_db
-
+from models import  Upload, User, Sound, db, connect_db 
 import pdb
 #instantiating an instance of the LoginManager class
 login_manager = LoginManager()
@@ -121,10 +120,13 @@ def get_user_sounds(user_id, page_num):
     """get and display the user sounds paginated"""
     #Get user
     user = User.query.get_or_404(user_id)
-
+    sounds = Sound.query.all()
+   
     #Get Uploads using user id 
     uploads = Upload.query.paginate(per_page=5, page=page_num, error_out=True)
-    return render_template('display.html', user=user, uploads=uploads)
+    
+
+    return render_template('display.html', user=user, sounds=sounds, uploads=uploads)
 
 ##############################################################################
 # Sound Views 
@@ -174,3 +176,15 @@ def display_sound_detail(sound_id):
     sound_data = BytesIO(sound.audiofile)
 
     return render_template('detail.html', user=user, sound_data=sound_data, sound=sound)
+
+@app.route('/sounds/details/<int:sound_id>/play')
+@login_required
+def play_audio(sound_id):
+    """View that reads the sound file"""
+    # Grab the sounds from the DB
+    sound = Sound.query.get_or_404(sound_id)
+    # logic from unpacking the sound from the DB to preview
+
+    return send_file(BytesIO(sound.audiofile), mimetype="audio/mp3")
+
+    

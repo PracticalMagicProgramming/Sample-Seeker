@@ -9,11 +9,13 @@
   <div class="d-grid gap-2 col-xl-8 mx-auto">
    
   <h5 class="card-title mt-4 text-muted">{{ sound.sound_name }}</h5>
-  
+
+  <!-- The source for the audio is a flask route that serves the binary data back as audio to be played by the controls -->
   <div class='audio-control mb-3'>
       <audio controls>
-       <source src={{ sound_data}} type="audio/wav">
-       <source src={{ sound_data }} type="audio/mpeg">
+        
+       <source src="/sounds/details/{{ sound.id }}/play" type="audio/wav">
+       <source src="/sounds/details/{{ sound.id }}/play" type="audio/mpeg">
       </audio>
   </div>
 

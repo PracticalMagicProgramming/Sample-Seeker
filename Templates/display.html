@@ -14,12 +14,14 @@
           <tbody>
            
                 {% for upload in uploads.items %}
-                    {% if upload.user_id == user.id %}
-                        <tr scope="row" class="align-middle">   
-                            <td class="align-middle"> {{ upload.sound.sound_name}} </td>
-                            <td class="align-middle"> <a href="/sounds/detail/{{ upload.sound_id }}" class="btn btn-dark">View Details</a></td>
-                        </tr>
-                    {% endif %}
+                    {% for sound in sounds %}
+                        {% if upload.user_id == user.id and upload.sound_id == sound.id %}
+                            <tr scope="row" class="align-middle">   
+                                <td class="align-middle"> {{ sound.sound_name }} </td>
+                                <td class="align-middle"> <a href="/sounds/detail/{{ upload.sound_id }}" class="btn btn-dark">View Details</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
             
           </tbody>

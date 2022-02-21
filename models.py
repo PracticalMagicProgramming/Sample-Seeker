@@ -53,10 +53,6 @@ class Sound(db.Model):
         nullable=False
     )
 
-    # established relationship between Sound and Upload
-    uploader= db.relationship('Upload',
-                                  backref='sound')
-
 
     def __repr__(self):
         return f"<User #{self.id}:{self.sound_type}, {self.tags}, {self.description}>"
