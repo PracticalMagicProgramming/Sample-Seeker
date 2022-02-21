@@ -5,11 +5,21 @@
 
 
 {% block content %}
-
-<h1>SAMPLE SEEKER REDUX</h1>
-
-<div>New? Register <a href='/register'>here!</a></div>
-<div>Returning? Login <a href='/login'>here!</a></div>
-
+  
+<h1 class="display-1 d-inline">
+  Welcome to 
+  <small class="text-muted"> Sample Seeker</small>
+</h1> 
+<blockquote class="blockquote">
+    <p>A sound organization tool for your sample library</p>
+</blockquote>
+  
+<div class="container-fluid">
+  <div class="d-grid gap-2 col-5 mx-auto">
+    <a href='/register' class="btn btn-dark"> New? Register here!</a>
+    <a href='/login' class="btn btn-secondary btn"> Returning? Login here!</a>
+  </div>  
+</div>
 
 {% endblock %}
+
