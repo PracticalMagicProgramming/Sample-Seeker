@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 from sqlalchemy.sql import text
 from forms import LoginForm, UploadForm, RegistrationForm
 from models import  Upload, User, Sound, db, connect_db 
-import pdb
+
 #instantiating an instance of the LoginManager class
 login_manager = LoginManager()
 
@@ -26,14 +26,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "sssh!1234")
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "itsaseacrit")
 toolbar = DebugToolbarExtension(app)
 
+# connect app with psql db
 connect_db(app)
 
 
 
-# This uses login manager to query our database and determine if the user is logged on or not
+# This uses login manager to query our database and determine if the user in session is logged in
 @login_manager.user_loader
 def load_user(user_id):
     """returns user id from session to validate login"""
@@ -172,7 +173,7 @@ def display_sound_detail(sound_id):
     user =  User.query.get_or_404(user_id)
     sound = Sound.query.get_or_404(sound_id)
     
-    # logic from unpacking the sound from the DB to preview
+    # logic for unpacking the sound from the DB to preview
     sound_data = BytesIO(sound.audiofile)
 
     return render_template('detail.html', user=user, sound_data=sound_data, sound=sound)
@@ -181,9 +182,9 @@ def display_sound_detail(sound_id):
 @login_required
 def play_audio(sound_id):
     """View that reads the sound file"""
-    # Grab the sounds from the DB
+    # Grab the sounds from the db
     sound = Sound.query.get_or_404(sound_id)
-    # logic from unpacking the sound from the DB to preview
+    # logic from unpacking the sound from the db to preview
 
     return send_file(BytesIO(sound.audiofile), mimetype="audio/mp3")
 
